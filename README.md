@@ -6,6 +6,8 @@
 
 ## GMS
 
+### Google Maps
+
 ```groovy
-implementation 'com.google.android.gms:play-services-maps:17.0.0'
+implementation 'COM.google.android.gms:play-services-maps:17.0.0'
 ```
