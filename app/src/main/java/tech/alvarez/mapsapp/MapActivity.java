@@ -10,10 +10,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.huawei.hms.maps.HuaweiMap;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, com.huawei.hms.maps.OnMapReadyCallback {
 
-    private GoogleMap map;
+    private GoogleMap googleMap;
+    private HuaweiMap huaweiMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +23,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.googleMap);
         mapFragment.getMapAsync(this);
+
+        com.huawei.hms.maps.SupportMapFragment map2Fragment = (com.huawei.hms.maps.SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.huaweiMap);
+        map2Fragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        this.googleMap = googleMap;
 
         LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        this.googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void onMapReady(HuaweiMap huaweiMap) {
+        this.huaweiMap = huaweiMap;
+
+        com.huawei.hms.maps.model.LatLng sydney = new com.huawei.hms.maps.model.LatLng (-34, 151);
+        this.huaweiMap.addMarker(new com.huawei.hms.maps.model.MarkerOptions().position(sydney).title("Hello"));
+        this.huaweiMap.moveCamera(com.huawei.hms.maps.CameraUpdateFactory.newLatLng(sydney));
     }
 }
