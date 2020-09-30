@@ -8,11 +8,11 @@
 
     <fragment
         android:id="@+id/googleMap"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:name="com.google.android.gms.maps.MapFragment"
         app:cameraTargetLat="-33.8"
         app:cameraTargetLng="151"
         app:cameraTilt="30"
-        app:cameraZoom="13"
+        app:cameraZoom="16"
         app:mapType="normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -23,7 +23,7 @@
         app:cameraTargetLat="-33.8"
         app:cameraTargetLng="151"
         app:cameraTilt="30"
-        app:cameraZoom="13"
+        app:cameraZoom="16"
         app:mapType="normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
