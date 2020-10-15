@@ -1,9 +1,12 @@
 package tech.alvarez.mapsapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -59,5 +62,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         this.huaweiMap.addMarker(markerOptions);
         this.huaweiMap.moveCamera(com.huawei.hms.maps.CameraUpdateFactory.newLatLng(officePosition));
+    }
+
+    public static boolean isGMSAvailable(Context context) {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 }
