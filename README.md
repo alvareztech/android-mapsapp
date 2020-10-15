@@ -1,5 +1,7 @@
 # Android MapsApp
 
+Sample app that shows the different map services.
+
 ## HMS
 
 ### MapKit
