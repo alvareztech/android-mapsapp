@@ -25,13 +25,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        MapFragment googleMapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.googleMap);
-        googleMapFragment.getMapAsync(this);
-
-        com.huawei.hms.maps.MapFragment huaweiMapFragment = (com.huawei.hms.maps.MapFragment) getFragmentManager()
-                .findFragmentById(R.id.huaweiMap);
-        huaweiMapFragment.getMapAsync(this);
+        if (isGMSAvailable(this)) {
+            MapFragment googleMapFragment = MapFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.mapContainer, googleMapFragment).commit();
+            googleMapFragment.getMapAsync(this);
+        } else {
+            com.huawei.hms.maps.MapFragment huaweiMapFragment = com.huawei.hms.maps.MapFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.mapContainer, huaweiMapFragment).commit();
+            huaweiMapFragment.getMapAsync(this);
+        }
     }
 
     @Override
