@@ -1,8 +1,12 @@
 # Android MapsApp
 
+Sample app that shows the different map services.
+
 ## HMS
 
 ### MapKit
+
+> Android Studio project requires a `agconnect-services.json` file.
 
 ```groovy
 implementation 'com.huawei.hms:maps:5.0.2.300'
