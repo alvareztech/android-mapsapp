@@ -1,12 +1,19 @@
 package tech.alvarez.mapsapp;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,8 +24,19 @@ import com.huawei.hms.maps.HuaweiMap;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, com.huawei.hms.maps.OnMapReadyCallback {
 
+    public static final String TAG = "DANIEL";
+
     private GoogleMap googleMap;
     private HuaweiMap huaweiMap;
+
+    private LocationCallback googleLocationCallback;
+    private com.huawei.hms.location.LocationCallback huaweiLocationCallback;
+
+    private FusedLocationProviderClient googleFusedLocationClient;
+    private com.huawei.hms.location.FusedLocationProviderClient huaweiFusedLocationClient;
+
+    private LocationRequest googleLocationRequest;
+    private com.huawei.hms.location.LocationRequest huaweiLocationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +52,41 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             getFragmentManager().beginTransaction().replace(R.id.mapContainer, huaweiMapFragment).commit();
             huaweiMapFragment.getMapAsync(this);
         }
+
+        googleLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLatitude());
+                }
+            }
+        };
+
+        huaweiLocationCallback = new com.huawei.hms.location.LocationCallback() {
+            @Override
+            public void onLocationResult(com.huawei.hms.location.LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    Log.d(TAG, "onLocationResult: " + location.getLatitude() + ", " + location.getLatitude());
+                }
+            }
+        };
+
+        googleLocationRequest = new LocationRequest();
+        googleLocationRequest.setInterval(10000);
+        googleLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);\
+
+        huaweiLocationRequest = new com.huawei.hms.location.LocationRequest();
+        huaweiLocationRequest.setInterval(10000);
+        huaweiLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        googleFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        huaweiFusedLocationClient = com.huawei.hms.location.LocationServices.getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -68,5 +121,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public static boolean isGMSAvailable(Context context) {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
+    }
+
+    private void startLocationUpdates(boolean gmsAvailable) {
+        if (gmsAvailable) {
+            googleFusedLocationClient.requestLocationUpdates(googleLocationRequest, googleLocationCallback, null);
+        } else {
+            huaweiFusedLocationClient.requestLocationUpdates(huaweiLocationRequest, huaweiLocationCallback, null);
+        }
+    }
+
+    private void stopLocationUpdates(boolean gmsAvailable) {
+        if (gmsAvailable) {
+            googleFusedLocationClient.removeLocationUpdates(googleLocationCallback);
+        } else {
+            huaweiFusedLocationClient.removeLocationUpdates(huaweiLocationCallback);
+        }
     }
 }
